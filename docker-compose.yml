@@ -1,0 +1,32 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:latest
+    build:
+      context: ${DOCKER_PATH}/nginx
+      # args: SERVER_NAME=${NGINX_SERVER_NAME}
+    volumes:
+      - .:/var/www/html
+      - ${DOCKER_PATH}/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      # - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+    ports:
+      - ${NGINX_HOST_HTTP_PORT}:80
+      - ${NGINX_HOST_HTTPS_PORT}:443
+  php:
+    build:
+      context: ${DOCKER_PATH}/php
+    volumes:
+      - .:/var/www/html
+  mysql:
+    image: mysql:5.7
+    environment:
+      # - MYSQL_DATABASE=${MYSQL_DATABASE}
+      # - MYSQL_USER=${MYSQL_USER}
+      # - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      # - MYSQL_ALLOW_EMPTY_PASSWORD=${MYSQL_ALLOW_EMPTY_PASSWORD}
+    # volumes:
+      # - ${BACKUP_DATA_PATH}/db/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
